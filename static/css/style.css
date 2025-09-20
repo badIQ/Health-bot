@@ -7,19 +7,18 @@
 
 body {
   font-family: Arial, sans-serif;
-  background: #f9f9f9 url('/static/images/bg.png') no-repeat center center fixed;
-  background-size: cover;
+  background: #f9f9f9;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 }
 
 /* App container */
 .app-container {
   width: 100%;
   max-width: 600px;
-  height: 90vh;
+  height: 90vh;              /* 🔥 fix height so chat can scroll */
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
@@ -35,6 +34,7 @@ header {
   padding: 15px;
   text-align: center;
   font-size: 1.2rem;
+  flex-shrink: 0;
 }
 
 /* Chat container */
@@ -42,16 +42,19 @@ header {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0; /* 🔥 enables scroll inside flex */
 }
 
 /* Chat box */
 .chat-box {
   flex: 1;
   padding: 15px;
-  overflow-y: auto;
+  overflow-y: auto; /* ✅ scrollable */
   background: #f1f1f1;
+  min-height: 0;   /* 🔥 important */
 }
 
+/* Messages */
 .msg {
   margin-bottom: 12px;
   max-width: 80%;
@@ -59,6 +62,7 @@ header {
   border-radius: 12px;
   line-height: 1.4;
   font-size: 14px;
+  word-wrap: break-word;
 }
 
 .msg.user {
@@ -87,6 +91,7 @@ header {
   border-top: 1px solid #ddd;
   padding: 10px;
   background: #fff;
+  flex-shrink: 0;
 }
 
 #user-input {
