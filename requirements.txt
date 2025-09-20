@@ -1,6 +1,6 @@
 # Web framework
 fastapi==0.110.0
-uvicorn==0.29.0
+uvicorn[standard]==0.29.0
 
 # Production server
 gunicorn==21.2.0
@@ -8,9 +8,9 @@ gunicorn==21.2.0
 # HTTP requests
 requests==2.31.0
 
-# For CORS (if frontend & backend are separate)
+# For CORS & file uploads
 python-multipart==0.0.9
 aiofiles==23.2.1
 
 # Data parsing / validation
-pydantic==2.7.0
+pydantic==2.6.4
