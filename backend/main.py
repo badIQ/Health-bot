@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from agents import get_bot_reply
+from backend.agents import get_bot_reply
 
 # -------------------------
 # Create FastAPI app
