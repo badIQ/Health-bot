@@ -1,4 +1,4 @@
-// script.js (place in Static/js/script.js)
+// script.js (place in static/js/script.js)
 
 /* ---------- Utilities ---------- */
 const USER_ID = 1;
@@ -77,11 +77,10 @@ async function sendMessage(){
 
   try {
     showTyping();
-    const data = await postJSON('/api/chat', { user_id: USER_ID, message });
+    // ✅ fixed endpoint: backend expects `/chat`
+    const data = await postJSON('/chat', { user_id: USER_ID, message });
     hideTyping();
 
-    // flexible parsing of bot response
-    // common keys used in your previous code: bot_reply, response
     let reply = '';
     if (data === null || data === undefined) {
       reply = '⚠️ No response from server';
@@ -94,17 +93,14 @@ async function sendMessage(){
       else if (data.message) reply = data.message;
       else if (data.text) reply = data.text;
       else if (data.reminders) {
-        // if backend sends reminders array accidentally here, show them
         reply = formatReminders(data.reminders);
       } else {
-        // fallback: pretty-print object
         reply = JSON.stringify(data);
       }
     } else {
       reply = String(data);
     }
 
-    // keep line breaks and lists readable -> render as HTML (safe-ish since from server)
     appendMessage({who:'bot', text: reply.replaceAll('\n','<br>'), raw:true});
 
   } catch (err) {
@@ -128,7 +124,6 @@ quickActions.addEventListener('click', (ev) => {
   } else if (action === 'My reminders') {
     showReminders();
   } else {
-    // put action into input and send
     inputEl.value = action;
     sendMessage();
   }
@@ -166,7 +161,6 @@ function closeReminderModal(){
   reminderModal.style.display = 'none';
 }
 
-/* hooking modal buttons */
 document.getElementById('modalClose').addEventListener('click', closeReminderModal);
 document.getElementById('cancelReminder').addEventListener('click', closeReminderModal);
 document.getElementById('saveReminder').addEventListener('click', async () => {
@@ -194,7 +188,6 @@ document.getElementById('saveReminder').addEventListener('click', async () => {
   }
 });
 
-/* close modal if user clicks outside */
 window.addEventListener('click', (ev)=>{
   if (ev.target === reminderModal) closeReminderModal();
 });
@@ -208,11 +201,8 @@ inputEl.addEventListener('keydown', (e)=>{
   }
 });
 
-/* ---------- initial greeting (non-blocking) ---------- */
+/* ---------- initial greeting ---------- */
 document.addEventListener('DOMContentLoaded', () => {
-  // focus input
   inputEl.focus();
-
-  // Optionally, show a friendly greeting (replace with server-sent initial message if you want)
   appendMessage({who:'bot', text:'Hello! I am your Health Assistant. Ask me about symptoms, reminders, or type "Check symptoms".'});
 });
