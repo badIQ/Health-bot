@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from backend.agents import get_bot_reply
 
 # Import bot logic (make sure backend/agents.py exists)
 try:
