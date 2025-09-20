@@ -1,59 +1,47 @@
-from flask import Flask, request, jsonify, render_template
+import os
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 from agents import get_bot_reply
 
 # -------------------------
-# Create Flask app
+# Create FastAPI app
 # -------------------------
-app = Flask(
-    _name_,
-    template_folder="../templates",   # looks in /templates
-    static_folder="../static"         # looks in /static
-)
+app = FastAPI(title="Health Chatbot API", version="1.0")
+
+# Mount static folder (CSS, JS)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # ✅ Health check (for Render uptime monitoring)
-@app.route("/api/status", methods=["GET"])
-def status():
-    return jsonify({
-        "status": "running",
-        "message": "✅ Health Bot REST API is live!"
-    }), 200
+@app.get("/api/status")
+async def status():
+    return {"status": "running", "message": "✅ Health Bot REST API is live!"}
 
-# ✅ Chat endpoint (called from JS fetch in script.js)
-@app.route("/chat", methods=["POST"])
-def chat():
+# ✅ Request body model
+class ChatRequest(BaseModel):
+    message: str
+    user_id: int = 1
+
+# ✅ Chat endpoint
+@app.post("/chat")
+async def chat(req: ChatRequest):
     try:
-        data = request.get_json()
-        if not data or "message" not in data:
-            return jsonify({"error": "Message field is required"}), 400
-
-        user_id = data.get("user_id", 1)
-        message = data["message"]
-
-        # Call your bot logic
-        reply = get_bot_reply(message, user_id)
-
-        return jsonify({
-            "user_id": user_id,
-            "user_message": message,
-            "bot_reply": reply
-        }), 200
-
+        reply = get_bot_reply(req.message, req.user_id)
+        return {
+            "user_id": req.user_id,
+            "user_message": req.message,
+            "bot_reply": reply,
+        }
     except Exception as e:
-        return jsonify({"error": f"⚠ Server error: {str(e)}"}), 500
+        return JSONResponse(status_code=500, content={"error": f"⚠️ Server error: {str(e)}"})
 
-# ✅ Serve frontend (index.html in /templates)
-@app.route("/")
-def home():
-    return render_template("index.html")
+# ✅ Serve frontend (index.html)
+@app.get("/", response_class=HTMLResponse)
+async def home():
+    return FileResponse(os.path.join("templates", "index.html"))
 
-# ✅ Optional second page for full chat UI
-@app.route("/chatpage")
-def chatpage():
-    return render_template("chat.html")
-
-# -------------------------
-# Start the server (local only)
-# -------------------------
-if _name_ == "_main_":
-    print("🚀 Health Bot running at http://127.0.0.1:5000")
-    app.run(host="0.0.0.0", port=5000, debug=True)
+# ✅ Optional second page (chat.html)
+@app.get("/chatpage", response_class=HTMLResponse)
+async def chatpage():
+    return FileResponse(os.path.join("templates", "chat.html"))
