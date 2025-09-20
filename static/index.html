@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Health Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-wrapper">
+    <div class="chat-shell">
+      <header class="chat-header">
+        <div class="brand">
+          <div class="logo">💙</div>
+          <div>
+            <h1>Health Assistant</h1>
+            <p class="sub">Your quick health companion</p>
+          </div>
+        </div>
+      </header>
+
+      <main id="chat-box" class="chat-box" aria-live="polite"></main>
+
+      <!-- quick actions -->
+      <div class="quick-actions" id="quick-actions">
+        <button class="chip" data-action="Check symptoms">Check symptoms</button>
+        <button class="chip" data-action="Set a reminder">Set a reminder</button>
+        <button class="chip" data-action="My reminders">My reminders</button>
+      </div>
+
+      <div class="input-area">
+        <input id="user-input" type="text" placeholder="Type a message or choose a quick action" autocomplete="off" />
+        <button id="send-btn" aria-label="Send message">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reminder Modal -->
+  <div id="reminderModal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="reminder-title">
+      <button class="modal-close" id="modalClose" title="Close">&times;</button>
+      <h3 id="reminder-title">Set a reminder</h3>
+      <label>
+        Reminder
+        <input id="reminderText" type="text" placeholder="Take medicine / Drink water" />
+      </label>
+      <label>
+        Time
+        <input id="reminderTime" type="datetime-local" />
+      </label>
+      <div class="modal-actions">
+        <button id="saveReminder">Save</button>
+        <button id="cancelReminder" class="alt">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
