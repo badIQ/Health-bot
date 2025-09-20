@@ -3,9 +3,8 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from backend.agents import get_bot_reply
 
-# Import bot logic (make sure backend/agents.py exists)
+# Import bot logic safely
 try:
     from backend.agents import get_bot_reply
 except ImportError as e:
@@ -16,7 +15,7 @@ except ImportError as e:
 # -------------------------
 app = FastAPI(title="Health Chatbot API", version="1.0")
 
-# Mount static folder (CSS, JS) if available
+# ✅ Mount static folder (CSS, JS) only if present
 if os.path.isdir("static"):
     app.mount("/static", StaticFiles(directory="static"), name="static")
 
